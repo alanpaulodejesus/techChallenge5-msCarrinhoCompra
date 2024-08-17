@@ -1,7 +1,10 @@
 package techclallenge5.fiap.com.msCarrinhoCompra.repository;
 
-import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import reactor.core.publisher.Mono;
-public interface ShoppingCartRepository extends Reactive CrudRepository<ShoppingCart, Long> {
+import techclallenge5.fiap.com.msCarrinhoCompra.model.ShoppingCart;
+
+import org.springframework.data.repository.reactive.ReactiveCrudRepository;
+
+public interface ShoppingCartRepository extends ReactiveCrudRepository<ShoppingCart, Long> {
     Mono<ShoppingCart> findByUserId(String userId);
 }
