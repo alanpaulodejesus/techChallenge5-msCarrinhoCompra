@@ -13,8 +13,17 @@ import java.io.IOException;
 import java.util.List;
 
 @Table("cart")
-//@Data
 public class Cart {
+
+    @Id
+    private Long id;
+    private Long userId;
+
+    @JsonIgnore
+    private String itemsJson;
+    @Transient
+    private List<CartItem> items;
+
     public Long getUserId() {
         return userId;
     }
@@ -30,16 +39,6 @@ public class Cart {
     public void setId(Long id) {
         this.id = id;
     }
-
-    @Id
-    private Long id;
-    private Long userId;
-
-    @JsonIgnore
-    private String itemsJson; // para armazenar a string JSON
-
-    @Transient
-    private List<CartItem> items;
 
     public List<CartItem> getItems() {
         if (items == null && itemsJson != null) {

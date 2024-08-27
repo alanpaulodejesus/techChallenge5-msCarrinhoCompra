@@ -2,7 +2,7 @@
 --INSERT INTO users (id, username, email) VALUES (12,'user12', 'user1@example.com');
 
 MERGE INTO users (id, username, email)
-KEY (email)
+KEY (id)
 VALUES (1, 'user1', 'user1@example.com'), (2, 'user2', 'user2@example.com');
 
 MERGE INTO cart (id, user_id, items_json)
