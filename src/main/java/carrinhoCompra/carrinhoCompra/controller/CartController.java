@@ -16,11 +16,6 @@ public class CartController {
         this.cartService = cartService;
     }
 
-//    @GetMapping("/{userId}")
-//    public Mono<Cart> getCart(@PathVariable Long userId) {
-//        return cartService.getCartByUserId(userId);
-//    }
-
     @PostMapping("/{userId}/add")
     public Mono<Cart> addItemToCart(@PathVariable Long userId, @RequestBody CartItem item) {
         return cartService.addItemToCart(userId, item);

@@ -2,6 +2,7 @@ package carrinhoCompra.carrinhoCompra.model;
 
 
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Generated;
 import org.springframework.data.annotation.*;
 import org.springframework.data.relational.core.mapping.Table;
@@ -10,9 +11,11 @@ import org.springframework.data.relational.core.mapping.Table;
 public class CartItem {
     @Id
     @Generated
+    @Schema(hidden = true)
     private Long id;
     private Long productId;
     private int quantity;
+    @Schema(hidden = true)
     private Long cartId;
 
     public Long getCartId() {
