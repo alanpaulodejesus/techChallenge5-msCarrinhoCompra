@@ -2,12 +2,14 @@ package carrinhoCompra.carrinhoCompra.model;
 
 
 
-import org.springframework.data.annotation.Id;
+import lombok.Generated;
+import org.springframework.data.annotation.*;
 import org.springframework.data.relational.core.mapping.Table;
 
 @Table("cart_item")
 public class CartItem {
     @Id
+    @Generated
     private Long id;
     private Long productId;
     private int quantity;
