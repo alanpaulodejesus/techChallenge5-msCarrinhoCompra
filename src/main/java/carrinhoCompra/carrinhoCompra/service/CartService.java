@@ -4,6 +4,7 @@ import carrinhoCompra.carrinhoCompra.controller.UserClient;
 import carrinhoCompra.carrinhoCompra.exception.UsersNotFoundException;
 import carrinhoCompra.carrinhoCompra.model.Cart;
 import carrinhoCompra.carrinhoCompra.model.CartItem;
+import carrinhoCompra.carrinhoCompra.model.Status;
 import carrinhoCompra.carrinhoCompra.repository.CartItemRepository;
 import carrinhoCompra.carrinhoCompra.repository.CartRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -28,12 +29,20 @@ public class CartService {
 
     public Mono<Cart> getCartByUserId(Long userId) {
         return cartRepository.findByUserId(userId)
+                .flatMap(cart -> {
+                    if (cart.getStatus() == Status.FINALIZADO) {
+                        return createNewCart(userId);
+                    } else {
+                        return Mono.just(cart);
+                    }
+                })
                 .switchIfEmpty(Mono.defer(() -> createNewCart(userId)));
     }
 
-    private Mono<Cart> createNewCart(Long userId) {
+    public Mono<Cart> createNewCart(Long userId) {
         Cart cart = new Cart();
         cart.setUserId(userId);
+        cart.setStatus(Status.INICIALIZADO);
         return cartRepository.save(cart);
     }
 
@@ -54,6 +63,21 @@ public class CartService {
                             })
                             .flatMap(mono -> mono);
                 });
+    }
+
+    public Mono<Cart> updateStatusToCart(Long userId) {
+        //validateClient(userId);
+        return cartRepository.findByUserId(userId)
+                .flatMap(cart -> {
+                    if (cart.getStatus() != Status.FINALIZADO) {
+                        cart.setUserId(userId);
+                        cart.setStatus(Status.FINALIZADO);
+                        return cartRepository.save(cart);
+                    } else {
+                        return Mono.just(cart);
+                    }
+                })
+                .switchIfEmpty(Mono.defer(() -> createNewCart(userId)));
     }
 
     private void validateClient(Long clientId) {

@@ -2,7 +2,9 @@ package carrinhoCompra.carrinhoCompra.controller;
 
 import carrinhoCompra.carrinhoCompra.model.Cart;
 import carrinhoCompra.carrinhoCompra.model.CartItem;
+import carrinhoCompra.carrinhoCompra.model.Status;
 import carrinhoCompra.carrinhoCompra.service.CartService;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
@@ -16,11 +18,37 @@ public class CartController {
         this.cartService = cartService;
     }
 
+    @Operation(
+            summary = "Criar carrinho",
+            description = "Este endpoint cria um carrinho para um usuário."
+    )
+    @PostMapping("/create/{userId}")
+    public Mono<Cart> createCartForUser(@PathVariable Long userId) {
+        return cartService.createNewCart(userId);
+    }
+
+    @Operation(
+            summary = "Adicionar item no carrinho",
+            description = "Este endpoint adiciona itens a um carrinho para um usuário."
+    )
     @PostMapping("/{userId}/add")
     public Mono<Cart> addItemToCart(@PathVariable Long userId, @RequestBody CartItem item) {
         return cartService.addItemToCart(userId, item);
     }
 
+    @Operation(
+            summary = "Alterar status do carrinho",
+            description = "Este endpoint alterar sattus do carrinho."
+    )
+    @PutMapping("/{userId}/update-status")
+    public Mono<Cart> updateStatusCart(@PathVariable Long userId) {
+        return cartService.updateStatusToCart(userId);
+    }
+
+    @Operation(
+            summary = "Excluir item no carrinho",
+            description = "Este endpoint exclui itens a um carrinho para um usuário."
+    )
     @DeleteMapping("/{userId}/remove/{itemId}")
     public Mono<Cart> removeItemFromCart(@PathVariable Long userId, @PathVariable Long itemId) {
         return cartService.removeItemFromCart(userId, itemId);

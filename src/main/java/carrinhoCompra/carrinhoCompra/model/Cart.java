@@ -24,6 +24,7 @@ public class Cart {
     private String itemsJson;
     @Transient
     private List<CartItem> items;
+    private Status status;
 
     public Long getUserId() {
         return userId;
@@ -32,7 +33,13 @@ public class Cart {
     public void setUserId(Long userId) {
         this.userId = userId;
     }
+    public Status getStatus() {
+        return status;
+    }
 
+    public void setStatus(Status status) {
+        this.status = status;
+    }
     public Long getId() {
         return id;
     }
