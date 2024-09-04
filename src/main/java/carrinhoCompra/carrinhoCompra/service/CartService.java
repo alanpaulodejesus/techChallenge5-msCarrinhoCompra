@@ -9,6 +9,7 @@ import carrinhoCompra.carrinhoCompra.repository.CartItemRepository;
 import carrinhoCompra.carrinhoCompra.repository.CartRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import feign.FeignException;
+import io.r2dbc.spi.R2dbcDataIntegrityViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
@@ -26,6 +27,7 @@ public class CartService {
         this.cartItemRepository = cartItemRepository;
         this.userClient = userClient;
     }
+
 
     public Mono<Cart> getCartByUserId(Long userId) {
         return cartRepository.findByUserId(userId)
@@ -76,8 +78,8 @@ public class CartService {
                     } else {
                         return Mono.just(cart);
                     }
-                })
-                .switchIfEmpty(Mono.defer(() -> createNewCart(userId)));
+                });
+                //.switchIfEmpty(Mono.defer(() -> createNewCart(userId)));
     }
 
     private void validateClient(Long clientId) {

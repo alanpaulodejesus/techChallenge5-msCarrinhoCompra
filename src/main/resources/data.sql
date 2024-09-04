@@ -3,10 +3,10 @@
 
 MERGE INTO users (id, username, email)
 KEY (id)
-VALUES (1, 'user1', 'user1@example.com'), (2, 'user2', 'user2@example.com'), (3, 'user3', 'user3@example.com');
+VALUES (2000, 'user1', 'user1@example.com'), (2001, 'user2', 'user2@example.com'), (2003, 'user3', 'user3@example.com');
 
 MERGE INTO cart (id, user_id, items_json, status)
 KEY (id)
-VALUES (1, 1, '[{"productId":1, "quantity":2}]', 'FINALIZADO');
+VALUES (2000, 2001, '[{"productId":2000, "quantity":2}]', 'FINALIZADO');
 
-INSERT INTO cart_item (product_id, quantity, cart_id) VALUES (1, 10, 1);
+INSERT INTO cart_item (product_id, quantity, cart_id) VALUES (2000, 10, 2000);
