@@ -1,6 +1,8 @@
 package carrinhoCompra.carrinhoCompra.service;
 
+import carrinhoCompra.carrinhoCompra.controller.GestaoItem;
 import carrinhoCompra.carrinhoCompra.controller.UserClient;
+import carrinhoCompra.carrinhoCompra.exception.ItensNotFoundException;
 import carrinhoCompra.carrinhoCompra.exception.UsersNotFoundException;
 import carrinhoCompra.carrinhoCompra.model.Cart;
 import carrinhoCompra.carrinhoCompra.model.CartItem;
@@ -20,12 +22,14 @@ public class CartService {
     private final CartRepository cartRepository;
     private final CartItemRepository cartItemRepository;
     private final UserClient userClient;
+    private final GestaoItem gestaoItem;
 
     @Autowired
-    public CartService(CartRepository cartRepository, CartItemRepository cartItemRepository, UserClient userClient) {
+    public CartService(CartRepository cartRepository, CartItemRepository cartItemRepository, UserClient userClient, GestaoItem gestaoItem) {
         this.cartRepository = cartRepository;
         this.cartItemRepository = cartItemRepository;
         this.userClient = userClient;
+        this.gestaoItem = gestaoItem;
     }
 
 
@@ -50,6 +54,7 @@ public class CartService {
 
     public Mono<Cart> addItemToCart(Long userId, CartItem item) {
         //validateClient(userId);
+        //validateItem(item);
         return getCartByUserId(userId)
                 .flatMap(cart -> {
                     item.setCartId(cart.getId());
@@ -79,7 +84,6 @@ public class CartService {
                         return Mono.just(cart);
                     }
                 });
-                //.switchIfEmpty(Mono.defer(() -> createNewCart(userId)));
     }
 
     private void validateClient(Long clientId) {
@@ -87,6 +91,14 @@ public class CartService {
             this.userClient.getUserById(clientId);
         } catch (FeignException.NotFound e) {
             throw new UsersNotFoundException();
+        }
+    }
+
+    private void validateItem(Long id) {
+        try {
+            this.gestaoItem.getItemById(id);
+        } catch (FeignException.NotFound e) {
+            throw new ItensNotFoundException();
         }
     }
 
