@@ -17,8 +17,12 @@ ALTER TABLE cart ALTER COLUMN id RESTART WITH 1;
 
 CREATE TABLE IF NOT EXISTS cart_item (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    item_id BIGINT NOT NULL,
+    descricao VARCHAR(255),
     product_id BIGINT NOT NULL,
     quantity INT NOT NULL,
+    preco_total FLOAT,
+    preco_unitario FLOAT,
     cart_id BIGINT NOT NULL,
     FOREIGN KEY (cart_id) REFERENCES cart(id)
 );
