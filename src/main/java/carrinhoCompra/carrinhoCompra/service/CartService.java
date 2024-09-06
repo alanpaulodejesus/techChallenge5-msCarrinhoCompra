@@ -100,7 +100,6 @@ public class CartService {
     }
 
 
-
     public Mono<Cart> updateStatusToCart(Long userId) {
         //validateClient(userId);
         return cartRepository.findByUserId(userId)
@@ -112,6 +111,15 @@ public class CartService {
                     } else {
                         return Mono.just(cart);
                     }
+                });
+    }
+
+    public Flux<Cart> finishStatusToCart(Long userId) {
+        //validateClient(userId);
+        return cartRepository.findByUserIdAndStatusNot(userId, Status.FINALIZADO)
+                .flatMap(cart -> {
+                    cart.setStatus(Status.FINALIZADO);
+                    return cartRepository.save(cart);
                 });
     }
 
