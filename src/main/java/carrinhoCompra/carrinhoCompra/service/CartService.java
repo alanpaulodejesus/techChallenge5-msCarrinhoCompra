@@ -2,6 +2,7 @@ package carrinhoCompra.carrinhoCompra.service;
 
 import carrinhoCompra.carrinhoCompra.controller.GestaoItem;
 import carrinhoCompra.carrinhoCompra.controller.UserClient;
+import carrinhoCompra.carrinhoCompra.dto.CartItemRequestDTO;
 import carrinhoCompra.carrinhoCompra.exception.ItensNotFoundException;
 import carrinhoCompra.carrinhoCompra.exception.UsersNotFoundException;
 import carrinhoCompra.carrinhoCompra.model.Cart;
@@ -52,25 +53,51 @@ public class CartService {
         return cartRepository.save(cart);
     }
 
-    public Mono<Cart> addItemToCart(Long userId, CartItem item) {
+    public Mono<Cart> addItemToCart(Long userId, CartItemRequestDTO requestDTO) {
         //validateClient(userId);
         //validateItem(item);
-        return getCartByUserId(userId)
-                .flatMap(cart -> {
-                    item.setCartId(cart.getId());
-                    return cartItemRepository.save(item)
-                            .then(cartItemRepository.findByCartId(cart.getId()).collectList())
-                            .map(items -> {
-                                try {
-                                    cart.setItems(items);
-                                } catch (JsonProcessingException e) {
-                                    throw new RuntimeException(e);
-                                }
-                                return cartRepository.save(cart).thenReturn(cart);
-                            })
-                            .flatMap(mono -> mono);
-                });
+        Long itemId = requestDTO.getItemId();
+
+        //MOCK
+        CartItem externalItem = new CartItem();
+        externalItem.setItemId(itemId);
+        externalItem.setDescricao("Descrição Mockada");
+        externalItem.setProductId(123L);
+        externalItem.setPrecoUnitario(50.0f);
+        externalItem.setQuantity(2);
+        externalItem.setPrecoTotal(100.0f);
+
+
+//        return gestaoItem.getItemById(itemId)
+//                .flatMap(externalItem -> {
+//                    CartItem item = new CartItem();
+//                    item.setItemId(externalItem.getItemId());
+//                    item.setDescricao(externalItem.getDescricao());
+//                    item.setProductId(externalItem.getProductId());
+//                    item.setPrecoUnitario(externalItem.getPrecoUnitario());
+//                    item.setQuantity(externalItem.getQuantity());
+//                    item.setPrecoTotal(externalItem.getPrecoTotal());
+
+                    return getCartByUserId(userId)
+                            .flatMap(cart -> {
+                                //item.setCartId(cart.getId());
+                                externalItem.setCartId(cart.getId()); //MOCK
+                                return cartItemRepository.save(externalItem)//SAVE "item" original
+                                        .then(cartItemRepository.findByCartId(cart.getId()).collectList())
+                                        .map(items -> {
+                                            try {
+                                                cart.setItems(items);
+                                            } catch (JsonProcessingException e) {
+                                                throw new RuntimeException(e);
+                                            }
+                                            return cartRepository.save(cart).thenReturn(cart);
+                                        })
+                                        .flatMap(mono -> mono);
+                            });
+                //});
     }
+
+
 
     public Mono<Cart> updateStatusToCart(Long userId) {
         //validateClient(userId);
@@ -96,7 +123,7 @@ public class CartService {
 
     private void validateItem(Long id) {
         try {
-            this.gestaoItem.getItemById(id);
+            this.gestaoItem.getItemById( id);
         } catch (FeignException.NotFound e) {
             throw new ItensNotFoundException();
         }

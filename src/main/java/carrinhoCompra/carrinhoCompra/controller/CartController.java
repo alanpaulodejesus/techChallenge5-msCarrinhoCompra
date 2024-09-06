@@ -1,5 +1,6 @@
 package carrinhoCompra.carrinhoCompra.controller;
 
+import carrinhoCompra.carrinhoCompra.dto.CartItemRequestDTO;
 import carrinhoCompra.carrinhoCompra.model.Cart;
 import carrinhoCompra.carrinhoCompra.model.CartItem;
 import carrinhoCompra.carrinhoCompra.model.Status;
@@ -32,8 +33,8 @@ public class CartController {
             description = "Este endpoint adiciona itens a um carrinho para um usuário."
     )
     @PostMapping("/{userId}/add")
-    public Mono<Cart> addItemToCart(@PathVariable Long userId, @RequestBody CartItem item) {
-        return cartService.addItemToCart(userId, item);
+    public Mono<Cart> addItemToCart(@PathVariable Long userId, @RequestBody CartItemRequestDTO requestDTO) {
+        return cartService.addItemToCart(userId, requestDTO);
     }
 
     @Operation(
