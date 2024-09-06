@@ -2,11 +2,10 @@ package carrinhoCompra.carrinhoCompra.controller;
 
 import carrinhoCompra.carrinhoCompra.dto.CartItemRequestDTO;
 import carrinhoCompra.carrinhoCompra.model.Cart;
-import carrinhoCompra.carrinhoCompra.model.CartItem;
-import carrinhoCompra.carrinhoCompra.model.Status;
 import carrinhoCompra.carrinhoCompra.service.CartService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @RestController
@@ -33,7 +32,7 @@ public class CartController {
             description = "Este endpoint adiciona itens a um carrinho para um usuário."
     )
     @PostMapping("/{userId}/add")
-    public Mono<Cart> addItemToCart(@PathVariable Long userId, @RequestBody CartItemRequestDTO requestDTO) {
+    public Flux<Cart> addItemToCart(@PathVariable Long userId, @RequestBody CartItemRequestDTO requestDTO) {
         return cartService.addItemToCart(userId, requestDTO);
     }
 

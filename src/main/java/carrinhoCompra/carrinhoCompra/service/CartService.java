@@ -12,9 +12,9 @@ import carrinhoCompra.carrinhoCompra.repository.CartItemRepository;
 import carrinhoCompra.carrinhoCompra.repository.CartRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import feign.FeignException;
-import io.r2dbc.spi.R2dbcDataIntegrityViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Service
@@ -47,13 +47,15 @@ public class CartService {
     }
 
     public Mono<Cart> createNewCart(Long userId) {
+        //validateClient(userId);
+        getCartByUserId(userId);
         Cart cart = new Cart();
         cart.setUserId(userId);
         cart.setStatus(Status.INICIALIZADO);
         return cartRepository.save(cart);
     }
 
-    public Mono<Cart> addItemToCart(Long userId, CartItemRequestDTO requestDTO) {
+    public Flux<Cart> addItemToCart(Long userId, CartItemRequestDTO requestDTO) {
         //validateClient(userId);
         //validateItem(item);
         Long itemId = requestDTO.getItemId();
@@ -78,22 +80,22 @@ public class CartService {
 //                    item.setQuantity(externalItem.getQuantity());
 //                    item.setPrecoTotal(externalItem.getPrecoTotal());
 
-                    return getCartByUserId(userId)
-                            .flatMap(cart -> {
-                                //item.setCartId(cart.getId());
-                                externalItem.setCartId(cart.getId()); //MOCK
-                                return cartItemRepository.save(externalItem)//SAVE "item" original
-                                        .then(cartItemRepository.findByCartId(cart.getId()).collectList())
-                                        .map(items -> {
-                                            try {
-                                                cart.setItems(items);
-                                            } catch (JsonProcessingException e) {
-                                                throw new RuntimeException(e);
-                                            }
-                                            return cartRepository.save(cart).thenReturn(cart);
-                                        })
-                                        .flatMap(mono -> mono);
-                            });
+        return cartRepository.findByUserIdAndStatusNot(userId, Status.FINALIZADO)
+                .flatMap(cart -> {
+                    // Associa o item ao carrinho e salva
+                    externalItem.setCartId(cart.getId());
+                    return cartItemRepository.save(externalItem)
+                            .then(cartItemRepository.findByCartId(cart.getId()).collectList())
+                            .map(items -> {
+                                try {
+                                    cart.setItems(items);
+                                } catch (JsonProcessingException e) {
+                                    throw new RuntimeException(e);
+                                }
+                                return cartRepository.save(cart).thenReturn(cart);
+                            })
+                            .flatMap(mono -> mono);
+                });
                 //});
     }
 
