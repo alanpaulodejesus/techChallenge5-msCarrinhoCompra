@@ -47,6 +47,14 @@ public class CartController {
     }
 
     @Operation(
+            summary = "Finalizar status do carrinho",
+            description = "Este endpoint finalizar itens do carrinho."
+    )
+    @PostMapping("/{userId}/update-status")
+    public Mono<Cart> finishStatusCart(@PathVariable Long userId) {
+        return cartService.updateStatusToCart(userId);
+    }
+    @Operation(
             summary = "Excluir item no carrinho",
             description = "Este endpoint exclui itens a um carrinho para um usuário."
     )
