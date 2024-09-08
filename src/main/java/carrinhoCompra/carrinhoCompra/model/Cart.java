@@ -17,6 +17,7 @@ public class Cart {
     @Id
     private Long id;
     private Long userId;
+    private Double totalValue;
 
     @JsonIgnore
     private String itemsJson;
@@ -45,7 +46,13 @@ public class Cart {
     public void setId(Long id) {
         this.id = id;
     }
+    public Double getTotalValue() {
+        return totalValue;
+    }
 
+    public void setTotalValue(Double totalValue) {
+        this.totalValue = totalValue;
+    }
     public List<CartItem> getItems() {
         if (items == null && itemsJson != null) {
             ObjectMapper mapper = new ObjectMapper();

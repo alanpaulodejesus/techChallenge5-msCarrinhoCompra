@@ -17,6 +17,8 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.stream.Collectors;
+
 @Service
 public class CartService {
 
@@ -54,11 +56,13 @@ public class CartService {
         cart.setStatus(Status.INICIALIZADO);
         return cartRepository.save(cart);
     }
-
+    //MOCK
     public Flux<Cart> addItemToCart(Long userId, CartItemRequestDTO requestDTO) {
         //validateClient(userId);
-        //validateItem(item);
+
         Long itemId = requestDTO.getItemId();
+        Integer quantity = requestDTO.getQuantity();
+        //validateItem(itemId);
 
         //MOCK
         CartItem externalItem = new CartItem();
@@ -66,8 +70,8 @@ public class CartService {
         externalItem.setDescricao("Descrição Mockada");
         externalItem.setProductId(123L);
         externalItem.setPrecoUnitario(50.0f);
-        externalItem.setQuantity(2);
-        externalItem.setPrecoTotal(100.0f);
+        externalItem.setQuantity(quantity);
+        externalItem.setPrecoTotal(quantity*externalItem.getPrecoUnitario());
 
 
 //        return gestaoItem.getItemById(itemId)
@@ -77,8 +81,8 @@ public class CartService {
 //                    item.setDescricao(externalItem.getDescricao());
 //                    item.setProductId(externalItem.getProductId());
 //                    item.setPrecoUnitario(externalItem.getPrecoUnitario());
-//                    item.setQuantity(externalItem.getQuantity());
-//                    item.setPrecoTotal(externalItem.getPrecoTotal());
+//                    item.setQuantity(requestDTO.getQuantity());
+//                    item.setPrecoTotal(item.getQuantity()*item.getPrecoUnitario());
 
         return cartRepository.findByUserIdAndStatusNot(userId, Status.FINALIZADO)
                 .flatMap(cart -> {
@@ -89,6 +93,11 @@ public class CartService {
                             .map(items -> {
                                 try {
                                     cart.setItems(items);
+                                    double total = 0.0;
+                                    for(CartItem item : items){
+                                        total+=item.getPrecoTotal();
+                                    }
+                                    cart.setTotalValue(total);
                                 } catch (JsonProcessingException e) {
                                     throw new RuntimeException(e);
                                 }

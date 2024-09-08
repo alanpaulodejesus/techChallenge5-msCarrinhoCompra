@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS cart (
     user_id BIGINT NOT NULL,
     status VARCHAR(255) NOT NULL,
     items_json TEXT,
+    total_value DOUBLE,
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
