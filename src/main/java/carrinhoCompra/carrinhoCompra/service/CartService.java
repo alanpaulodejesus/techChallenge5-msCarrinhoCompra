@@ -60,26 +60,25 @@ public class CartService {
 
         Long itemId = requestDTO.getItemId();
         Integer quantity = requestDTO.getQuantity();
-        //validateItem(itemId);
 
         //MOCK
-//        CartItem externalItem = new CartItem();
-//        externalItem.setItemId(itemId);
-//        externalItem.setDescricao("Descrição Mockada");
-//        externalItem.setProductId(123L);
-//        externalItem.setPrecoUnitario(50.0f);
-//        externalItem.setQuantity(quantity);
-//        externalItem.setPrecoTotal(quantity*externalItem.getPrecoUnitario());
+        CartItem externalItem = new CartItem();
+        externalItem.setItemId(itemId);
+        externalItem.setDescricao("Descrição Mockada");
+        externalItem.setProductId(123L);
+        externalItem.setPrecoUnitario(50.0f);
+        externalItem.setQuantity(quantity);
+        externalItem.setPrecoTotal(quantity*externalItem.getPrecoUnitario());
 
-        return gestaoItem.getItemById(itemId)
-                .flatMap(externalItem -> {
-                    CartItem item = new CartItem();
-                    item.setItemId(externalItem.getItemId());
-                    item.setDescricao(externalItem.getDescricao());
-                    item.setProductId(externalItem.getProductId());
-                    item.setPrecoUnitario(externalItem.getPrecoUnitario());
-                    item.setQuantity(requestDTO.getQuantity());
-                    item.setPrecoTotal(item.getQuantity()*item.getPrecoUnitario());
+//        return gestaoItem.getItemById(itemId)
+//                .flatMap(externalItem -> {
+//                    CartItem item = new CartItem();
+//                    item.setItemId(externalItem.getItemId());
+//                    item.setDescricao(externalItem.getDescricao());
+//                    item.setProductId(externalItem.getProductId());
+//                    item.setPrecoUnitario(externalItem.getPrecoUnitario());
+//                    item.setQuantity(requestDTO.getQuantity());
+//                    item.setPrecoTotal(item.getQuantity()*item.getPrecoUnitario());
 
         return cartRepository.findByUserIdAndStatusNot(userId, Status.FINALIZADO)
                 .flatMap(cart -> {
@@ -89,11 +88,11 @@ public class CartService {
                             .map(items -> {
                                 try {
                                     cart.setItems(items);
-                                    double total = 0.0;
-                                    for(CartItem item1 : items){
-                                        total+=item.getPrecoTotal();
-                                    }
-                                    cart.setTotalValue(total);
+//                                    double total = 0.0;
+//                                    for(CartItem item1 : items){
+//                                        total+=item.getPrecoTotal();
+//                                    }
+//                                    cart.setTotalValue(total);
                                 } catch (JsonProcessingException e) {
                                     throw new RuntimeException(e);
                                 }
@@ -101,7 +100,7 @@ public class CartService {
                             })
                             .flatMap(mono -> mono);
                     });
-                });
+                //});
       }
 
 
@@ -133,14 +132,6 @@ public class CartService {
             this.userClient.getUserById(clientId);
         } catch (FeignException.NotFound e) {
             throw new UsersNotFoundException();
-        }
-    }
-
-    private void validateItem(Long id) {
-        try {
-            this.gestaoItem.getItemById( id);
-        } catch (FeignException.NotFound e) {
-            throw new ItensNotFoundException();
         }
     }
 
