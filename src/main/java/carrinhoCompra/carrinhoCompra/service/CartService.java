@@ -17,8 +17,6 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.stream.Collectors;
-
 @Service
 public class CartService {
 
@@ -56,7 +54,7 @@ public class CartService {
         cart.setStatus(Status.INICIALIZADO);
         return cartRepository.save(cart);
     }
-    //MOCK
+
     public Flux<Cart> addItemToCart(Long userId, CartItemRequestDTO requestDTO) {
         //validateClient(userId);
 
@@ -65,28 +63,26 @@ public class CartService {
         //validateItem(itemId);
 
         //MOCK
-        CartItem externalItem = new CartItem();
-        externalItem.setItemId(itemId);
-        externalItem.setDescricao("Descrição Mockada");
-        externalItem.setProductId(123L);
-        externalItem.setPrecoUnitario(50.0f);
-        externalItem.setQuantity(quantity);
-        externalItem.setPrecoTotal(quantity*externalItem.getPrecoUnitario());
+//        CartItem externalItem = new CartItem();
+//        externalItem.setItemId(itemId);
+//        externalItem.setDescricao("Descrição Mockada");
+//        externalItem.setProductId(123L);
+//        externalItem.setPrecoUnitario(50.0f);
+//        externalItem.setQuantity(quantity);
+//        externalItem.setPrecoTotal(quantity*externalItem.getPrecoUnitario());
 
-
-//        return gestaoItem.getItemById(itemId)
-//                .flatMap(externalItem -> {
-//                    CartItem item = new CartItem();
-//                    item.setItemId(externalItem.getItemId());
-//                    item.setDescricao(externalItem.getDescricao());
-//                    item.setProductId(externalItem.getProductId());
-//                    item.setPrecoUnitario(externalItem.getPrecoUnitario());
-//                    item.setQuantity(requestDTO.getQuantity());
-//                    item.setPrecoTotal(item.getQuantity()*item.getPrecoUnitario());
+        return gestaoItem.getItemById(itemId)
+                .flatMap(externalItem -> {
+                    CartItem item = new CartItem();
+                    item.setItemId(externalItem.getItemId());
+                    item.setDescricao(externalItem.getDescricao());
+                    item.setProductId(externalItem.getProductId());
+                    item.setPrecoUnitario(externalItem.getPrecoUnitario());
+                    item.setQuantity(requestDTO.getQuantity());
+                    item.setPrecoTotal(item.getQuantity()*item.getPrecoUnitario());
 
         return cartRepository.findByUserIdAndStatusNot(userId, Status.FINALIZADO)
                 .flatMap(cart -> {
-                    // Associa o item ao carrinho e salva
                     externalItem.setCartId(cart.getId());
                     return cartItemRepository.save(externalItem)
                             .then(cartItemRepository.findByCartId(cart.getId()).collectList())
@@ -94,7 +90,7 @@ public class CartService {
                                 try {
                                     cart.setItems(items);
                                     double total = 0.0;
-                                    for(CartItem item : items){
+                                    for(CartItem item1 : items){
                                         total+=item.getPrecoTotal();
                                     }
                                     cart.setTotalValue(total);
@@ -104,9 +100,9 @@ public class CartService {
                                 return cartRepository.save(cart).thenReturn(cart);
                             })
                             .flatMap(mono -> mono);
+                    });
                 });
-                //});
-    }
+      }
 
 
     public Mono<Cart> updateStatusToCart(Long userId) {

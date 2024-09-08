@@ -7,7 +7,7 @@ import lombok.Generated;
 import org.springframework.data.annotation.*;
 import org.springframework.data.relational.core.mapping.Table;
 
-@Table("cart_item")
+@Table("itens")
 public class CartItem {
     @Id
     @Generated
