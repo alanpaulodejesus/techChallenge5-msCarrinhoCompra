@@ -10,13 +10,14 @@ import org.springframework.data.relational.core.mapping.Table;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 
 @Table("cart")
 public class Cart {
 
     @Id
     private Long id;
-    private Long userId;
+    private UUID userId;
     private Double totalValue;
 
     @JsonIgnore
@@ -25,11 +26,11 @@ public class Cart {
     private List<CartItem> items;
     private Status status;
 
-    public Long getUserId() {
+    public UUID getUserId() {
         return userId;
     }
 
-    public void setUserId(Long userId) {
+    public void setUserId(UUID userId) {
         this.userId = userId;
     }
     public Status getStatus() {

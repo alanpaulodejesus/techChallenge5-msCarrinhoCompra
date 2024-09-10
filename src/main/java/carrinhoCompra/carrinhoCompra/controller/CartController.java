@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.UUID;
+
 @RestController
 @RequestMapping("/cart")
 public class CartController {
@@ -23,7 +25,7 @@ public class CartController {
             description = "Este endpoint cria um carrinho para um usuário."
     )
     @PostMapping("/create/{userId}")
-    public Mono<Cart> createCartForUser(@PathVariable Long userId) {
+    public Mono<Cart> createCartForUser(@PathVariable UUID userId) {
         return cartService.createNewCart(userId);
     }
 
@@ -32,7 +34,7 @@ public class CartController {
             description = "Este endpoint adiciona itens a um carrinho para um usuário."
     )
     @PostMapping("/{userId}/add")
-    public Flux<Cart> addItemToCart(@PathVariable Long userId, @RequestBody CartItemRequestDTO requestDTO) {
+    public Flux<Cart> addItemToCart(@PathVariable UUID userId, @RequestBody CartItemRequestDTO requestDTO) {
         return cartService.addItemToCart(userId, requestDTO);
     }
 
@@ -41,7 +43,7 @@ public class CartController {
             description = "Este endpoint alterar sattus do carrinho."
     )
     @PutMapping("/{userId}/update-status")
-    public Mono<Cart> updateStatusCart(@PathVariable Long userId) {
+    public Mono<Cart> updateStatusCart(@PathVariable UUID userId) {
         return cartService.updateStatusToCart(userId);
     }
 
@@ -50,7 +52,7 @@ public class CartController {
             description = "Este endpoint finalizar itens do carrinho."
     )
     @PostMapping("/{userId}/update-status")
-    public Flux<Cart> finishStatusCart(@PathVariable Long userId) {
+    public Flux<Cart> finishStatusCart(@PathVariable UUID userId) {
         return cartService.finishStatusToCart(userId);
     }
 
@@ -59,7 +61,7 @@ public class CartController {
             description = "Este endpoint exclui itens a um carrinho para um usuário."
     )
     @DeleteMapping("/{userId}/remove/{itemId}")
-    public Mono<Cart> removeItemFromCart(@PathVariable Long userId, @PathVariable Long itemId) {
+    public Mono<Cart> removeItemFromCart(@PathVariable UUID userId, @PathVariable Long itemId) {
         return cartService.removeItemFromCart(userId, itemId);
     }
 }
