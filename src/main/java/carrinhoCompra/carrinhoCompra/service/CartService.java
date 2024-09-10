@@ -35,7 +35,7 @@ public class CartService {
         this.gestaoItem = gestaoItem;
     }
 
-    public Mono<Cart> getCartByUserId(UUID userId) {
+    public Mono<Cart> getCartByUserId(Long userId) {
         return cartRepository.findByUserId(userId)
                 .flatMap(cart -> {
                     if (cart.getStatus() == Status.FINALIZADO) {
@@ -47,8 +47,8 @@ public class CartService {
                 .switchIfEmpty(Mono.defer(() -> createNewCart(userId)));
     }
 
-    public Mono<Cart> createNewCart(UUID userId) {
-        validateClient(userId);
+    public Mono<Cart> createNewCart(Long userId) {
+        //validateClient(userId);
         getCartByUserId(userId);
         Cart cart = new Cart();
         cart.setUserId(userId);
@@ -56,7 +56,7 @@ public class CartService {
         return cartRepository.save(cart);
     }
 
-    public Flux<Cart> addItemToCart(UUID userId, CartItemRequestDTO requestDTO) {
+    public Flux<Cart> addItemToCart(Long userId, CartItemRequestDTO requestDTO) {
         //validateClient(userId);
 
         Long itemId = requestDTO.getItemId();
@@ -70,6 +70,7 @@ public class CartService {
         externalItem.setPrecoUnitario(50.0f);
         externalItem.setQuantity(quantity);
         externalItem.setPrecoTotal(quantity*externalItem.getPrecoUnitario());
+
 
 //        return gestaoItem.getItemById(itemId)
 //                .flatMap(externalItem -> {
@@ -105,7 +106,7 @@ public class CartService {
       }
 
 
-    public Mono<Cart> updateStatusToCart(UUID userId) {
+    public Mono<Cart> updateStatusToCart(Long userId) {
         //validateClient(userId);
         return cartRepository.findByUserId(userId)
                 .flatMap(cart -> {
@@ -119,7 +120,7 @@ public class CartService {
                 });
     }
 
-    public Flux<Cart> finishStatusToCart(UUID userId) {
+    public Flux<Cart> finishStatusToCart(Long userId) {
         //validateClient(userId);
         return cartRepository.findByUserIdAndStatusNot(userId, Status.FINALIZADO)
                 .flatMap(cart -> {
@@ -128,7 +129,7 @@ public class CartService {
                 });
     }
 
-    private void validateClient(UUID clientId) {
+    private void validateClient(Long clientId) {
         try {
             this.userClient.getUserById(clientId);
         } catch (FeignException.NotFound e) {
@@ -136,7 +137,7 @@ public class CartService {
         }
     }
 
-    public Mono<Cart> removeItemFromCart(UUID userId, Long itemId) {
+    public Mono<Cart> removeItemFromCart(Long userId, Long itemId) {
         return getCartByUserId(userId)
                 .flatMap(cart -> {
                     return cartItemRepository.findByCartId(cart.getId())

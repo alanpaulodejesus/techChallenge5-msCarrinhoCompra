@@ -9,6 +9,6 @@ import reactor.core.publisher.Mono;
 import java.util.UUID;
 
 public interface CartRepository extends ReactiveCrudRepository<Cart, UUID> {
-    Mono<Cart> findByUserId(UUID userId);
-    Flux<Cart> findByUserIdAndStatusNot(UUID userId, Status status);
+    Mono<Cart> findByUserId(Long userId);
+    Flux<Cart> findByUserIdAndStatusNot(Long userId, Status status);
 }
