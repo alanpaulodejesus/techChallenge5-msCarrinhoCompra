@@ -63,5 +63,15 @@ public class CartController {
     public Mono<Cart> removeItemFromCart(@PathVariable Long userId, @RequestParam String authToken, @PathVariable Long itemId) {
         return cartService.removeItemFromCart(userId, authToken, itemId);
     }
+
+    @Operation(
+            summary = "Obter carrinho por usuário",
+            description = "Este endpoint retorna o carrinho de um usuário com base no ID do usuário."
+    )
+    @GetMapping("/carts/{userId}")
+    public Mono<Cart> getCartByUserId(@PathVariable Long userId) {
+        return cartService.getCartByUser(userId);
+    }
+
 }
 
