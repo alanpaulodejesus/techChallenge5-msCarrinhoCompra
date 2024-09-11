@@ -10,7 +10,6 @@ import org.springframework.data.relational.core.mapping.Table;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.UUID;
 
 @Table("cart")
 public class Cart {

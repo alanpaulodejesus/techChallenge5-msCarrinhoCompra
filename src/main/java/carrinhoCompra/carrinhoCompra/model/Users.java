@@ -8,7 +8,7 @@ import java.util.UUID;
 @Data
 public class Users {
     @Id
-    private UUID id;
+    private Long id;
     private String username;
     private String email;
 
