@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-@FeignClient(name = "itens", url = "http://localhost:8085")
+@FeignClient(name = "itens", url = "http://localhost:8081")
 public interface GestaoItem {
     @GetMapping("/item/{id}")
-    Flux<CartItem> getItemById(@PathVariable("id") Long id);
+    Flux<CartItem> getItemById(@PathVariable("id") String id);
 }

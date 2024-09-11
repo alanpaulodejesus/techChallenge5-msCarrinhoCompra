@@ -57,7 +57,7 @@ public class CartService {
     public Flux<Cart> addItemToCart(Long userId, String authToken, CartItemRequestDTO requestDTO) {
         validateClient(userId, authToken);
 
-        Long itemId = requestDTO.getItemId();
+        String itemId = String.valueOf(requestDTO.getItemId());
         Integer quantity = requestDTO.getQuantity();
 
         //MOCK

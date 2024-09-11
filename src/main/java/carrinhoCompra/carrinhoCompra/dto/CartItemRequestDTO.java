@@ -6,7 +6,7 @@ import lombok.Data;
 @Data
 public class CartItemRequestDTO {
     @NotNull
-    private Long itemId;
+    private String itemId;
     private Integer quantity;
 
     public Integer getQuantity() {
@@ -17,11 +17,11 @@ public class CartItemRequestDTO {
         this.quantity = quantity;
     }
 
-    public Long getItemId() {
+    public String getItemId() {
         return itemId;
     }
 
-    public void setItemId(Long itemId) {
+    public void setItemId(String itemId) {
         this.itemId = itemId;
     }
 }

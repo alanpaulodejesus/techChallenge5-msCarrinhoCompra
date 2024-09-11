@@ -13,7 +13,7 @@ public class CartItem {
     @Generated
     @Schema(hidden = true)
     private Long id;
-    private Long itemId;
+    private String itemId;
     private String descricao;
     private Long productId;
     private int quantity;
@@ -71,11 +71,11 @@ public class CartItem {
         this.descricao = descricao;
     }
 
-    public Long getItemId() {
+    public String getItemId() {
         return itemId;
     }
 
-    public void setItemId(Long itemId) {
+    public void setItemId(String itemId) {
         this.itemId = itemId;
     }
 
