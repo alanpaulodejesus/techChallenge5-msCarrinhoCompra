@@ -3,6 +3,7 @@ package carrinhoCompra.carrinhoCompra.service;
 import carrinhoCompra.carrinhoCompra.controller.GestaoItem;
 import carrinhoCompra.carrinhoCompra.controller.UserClient;
 import carrinhoCompra.carrinhoCompra.dto.CartItemRequestDTO;
+import carrinhoCompra.carrinhoCompra.exception.UnauthorizedAccessException;
 import carrinhoCompra.carrinhoCompra.exception.UsersNotFoundException;
 import carrinhoCompra.carrinhoCompra.model.Cart;
 import carrinhoCompra.carrinhoCompra.model.CartItem;
@@ -131,6 +132,8 @@ public class CartService {
             userClient.getUserById(clientId,  "Bearer " + authToken);
         } catch (FeignException.NotFound e) {
             throw new UsersNotFoundException();
+        }catch (FeignException.Unauthorized e){
+            throw new UnauthorizedAccessException();
         }
     }
 

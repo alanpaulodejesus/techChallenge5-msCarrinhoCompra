@@ -4,13 +4,10 @@ import carrinhoCompra.carrinhoCompra.dto.CartItemRequestDTO;
 import carrinhoCompra.carrinhoCompra.model.Cart;
 import carrinhoCompra.carrinhoCompra.service.CartService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/cart")
@@ -62,10 +59,6 @@ public class CartController {
             summary = "Excluir item no carrinho",
             description = "Este endpoint exclui itens a um carrinho para um usuário."
     )
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Item removido com sucesso"),
-            @ApiResponse(responseCode = "404", description = "Item não encontrado")
-    })
     @DeleteMapping("/{userId}/remove/{itemId}")
     public Mono<Cart> removeItemFromCart(@PathVariable Long userId, @RequestParam String authToken, @PathVariable Long itemId) {
         return cartService.removeItemFromCart(userId, authToken, itemId);
