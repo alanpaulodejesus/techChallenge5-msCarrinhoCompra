@@ -45,9 +45,9 @@ public class CartService {
                 }).switchIfEmpty(Mono.defer(() -> createNewCart(userId, authToken)));
     }
 
-    public Mono<Cart> getCartByUser(Long userId) {
+    public Mono<Cart> getCartByUser(Long userId, String authToken) {
+        validateClient(userId, authToken);
         return cartRepository.findByUserId(userId);
-               
     }
 
 
