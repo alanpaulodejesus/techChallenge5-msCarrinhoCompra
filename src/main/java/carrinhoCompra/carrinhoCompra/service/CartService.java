@@ -45,11 +45,10 @@ public class CartService {
                 }).switchIfEmpty(Mono.defer(() -> createNewCart(userId, authToken)));
     }
 
-    public Mono<Cart> getCartByUser(Long userId, String authToken) {
+    public Flux<Cart> getCartByUser(Long userId, String authToken) {
         validateClient(userId, authToken);
-        return cartRepository.findByUserId(userId);
+        return cartRepository.findByUserIdOrderByIdAsc(userId);
     }
-
 
 
     public Mono<Cart> createNewCart(Long userId, String authToken) {
