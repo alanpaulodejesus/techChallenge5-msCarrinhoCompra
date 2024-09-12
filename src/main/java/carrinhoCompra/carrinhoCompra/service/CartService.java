@@ -74,16 +74,6 @@ public class CartService {
         externalItem.setQuantity(quantity);
         externalItem.setPrecoTotal(quantity*externalItem.getPrecoUnitario());
 
-//        return gestaoItem.getItemById(itemId)
-//                .flatMap(externalItem -> {
-//                    CartItem item = new CartItem();
-//                    item.setItemId(externalItem.getItemId());
-//                    item.setDescricao(externalItem.getDescricao());
-//                    item.setProductId(externalItem.getProductId());
-//                    item.setPrecoUnitario(externalItem.getPrecoUnitario());
-//                    item.setQuantity(requestDTO.getQuantity());
-//                    item.setPrecoTotal(item.getQuantity()*item.getPrecoUnitario());
-
         return cartRepository.findByUserIdAndStatusNot(userId, Status.FINALIZADO)
                 .flatMap(cart -> {
                     externalItem.setCartId(cart.getId());
@@ -104,7 +94,6 @@ public class CartService {
                             })
                             .flatMap(mono -> mono);
                     });
-                //});
       }
 
 
@@ -140,7 +129,6 @@ public class CartService {
             throw new UnauthorizedAccessException();
         }
     }
-
 
     public Mono<Cart> removeItemFromCart(Long userId, String authToken, Long itemId) {
         validateClient(userId, authToken);

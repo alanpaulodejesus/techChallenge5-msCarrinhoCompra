@@ -19,10 +19,8 @@ public class Databaseinitializer {
     @PostConstruct
     public void initializeDatabase() {
         try {
-            // Executa o script de criação de tabelas
             executeScript("schema.sql");
 
-            // Executa o script de inserção de dados
             executeScript("data.sql");
         } catch (Exception e) {
             e.printStackTrace();
