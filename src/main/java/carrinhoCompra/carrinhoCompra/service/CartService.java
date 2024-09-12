@@ -68,12 +68,11 @@ public class CartService {
         //MOCK
         CartItem externalItem = new CartItem();
         externalItem.setItemId(itemId);
-        externalItem.setDescricao("Descrição Mockada");
+        externalItem.setDescricao("Descrição de item com mock");
         externalItem.setProductId(123L);
         externalItem.setPrecoUnitario(50.0f);
         externalItem.setQuantity(quantity);
         externalItem.setPrecoTotal(quantity*externalItem.getPrecoUnitario());
-
 
 //        return gestaoItem.getItemById(itemId)
 //                .flatMap(externalItem -> {
@@ -93,11 +92,11 @@ public class CartService {
                             .map(items -> {
                                 try {
                                     cart.setItems(items);
-//                                    double total = 0.0;
-//                                    for(CartItem item1 : items){
-//                                        total+=item.getPrecoTotal();
-//                                    }
-//                                    cart.setTotalValue(total);
+                                    double total = 0.0;
+                                    for(CartItem item1 : items){
+                                        total+=item1.getPrecoTotal();
+                                    }
+                                    cart.setTotalValue(total);
                                 } catch (JsonProcessingException e) {
                                     throw new RuntimeException(e);
                                 }
