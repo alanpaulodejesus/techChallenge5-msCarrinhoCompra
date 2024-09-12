@@ -11,5 +11,5 @@ import java.util.UUID;
 public interface CartRepository extends ReactiveCrudRepository<Cart, UUID> {
     Mono<Cart> findByUserId(Long userId);
     Flux<Cart> findByUserIdAndStatusNot(Long userId, Status status);
-    Flux<Cart> findByUserIdOrderByIdAsc(Long userId);
+    Flux<Cart> findById(Long userId);
 }

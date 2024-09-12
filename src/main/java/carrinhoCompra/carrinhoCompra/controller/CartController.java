@@ -69,8 +69,8 @@ public class CartController {
             description = "Este endpoint retorna o carrinho de um usuário com base no ID do usuário."
     )
     @GetMapping("/{userId}")
-    public Flux<Cart> getCartByUserId(@PathVariable Long userId, @RequestParam String authToken) {
-        return cartService.getCartByUser(userId, authToken);
+    public Flux<Cart> getCartByUserId(@PathVariable Long id) {
+        return cartService.getCartById(id);
     }
 
 }
